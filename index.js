@@ -33,7 +33,7 @@ app.post('/kpedia', async (req, res) => {
   const query = req.body.text ? req.body.text : 'help';
   const queries = query.split(',');
   const command = queries[0];
-
+console.log(query)
   if (command.toString().toLocaleLowerCase() == "help") {
     let commandOptions = [
       {
@@ -72,86 +72,108 @@ app.post('/kpedia', async (req, res) => {
       }
       let aa = new linkModel.KpediaLink(linKData)
       aa.save();
-     return res.json("success")
+      let createResp = [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "`Success`        Blog posted successfully"
+          }
+        }];
+        const Createmessage = {
+          response_type: 'in_channel',
+          //text: `${places[0].name}`,
+          blocks: createResp
+        };
+        return res.json(Createmessage);
      }
       
+  }else if(command.toString().toLocaleLowerCase() == "getall"){
+
+    console.log("ASHiSH")
+    const blocks = [
+      // Result 1
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*Bangalore* \Bangalore City \n\nRating: 4 on Yelp \nPrice: 500`
+        },
+        accessory: {
+          type: 'image',
+          image_url: `https://s3-media2.fl.yelpcdn.com/bphoto/korel-1YjNtFtJlMTaC26A/o.jpg`,
+          alt_text: 'venue image'
+        }
+      },
+      {
+        'type': 'context',
+        'elements': [
+          {
+            'type': 'image',
+            'image_url': 'https://cdn.glitch.com/203fa7da-fadf-4c32-8d75-fb80800ef1b5%2Fyelp_logo_sm.png?1550364622921',
+            'alt_text': 'Yelp logo'
+          },
+          {
+            'type': 'plain_text',
+            'text': `200 reviews`,
+            'emoji': true
+          }
+        ]
+      },
+      {
+        'type': 'divider'
+      },
+  
+      // Result 2
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*Bangalore* \nBangalore City \n\nRating: 4 on Yelp \nPrice: 1000`
+        },
+        accessory: {
+          type: 'image',
+          image_url: `https://s3-media2.fl.yelpcdn.com/bphoto/korel-1YjNtFtJlMTaC26A/o.jpg`,
+          alt_text: 'venue image'
+        }
+      },
+      {
+        'type': 'context',
+        'elements': [
+          {
+            'type': 'image',
+            'image_url': 'https://cdn.glitch.com/203fa7da-fadf-4c32-8d75-fb80800ef1b5%2Fyelp_logo_sm.png?1550364622921',
+            'alt_text': 'Yelp logo'
+          },
+          {
+            'type': 'plain_text',
+            'text': `600 reviews`,
+            'emoji': true
+          }
+        ]
+      },
+      {
+        'type': 'divider'
+      }
+    ];
+
+    //let allLinks =  new linkModel.KpediaLink.find().exec();
+
+    // allLinks.forEach(data => {
+    //   blocks.push()
+    // });
+
+    const message = {
+      response_type: 'in_channel',
+      //text: `${places[0].name}`,
+      blocks: blocks
+    };
+    return res.json(message);
+
   }
 
-
-  const blocks = [
-    // Result 1
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Bangalore* \Bangalore City \n\nRating: 4 on Yelp \nPrice: 500`
-      },
-      accessory: {
-        type: 'image',
-        image_url: `https://s3-media2.fl.yelpcdn.com/bphoto/korel-1YjNtFtJlMTaC26A/o.jpg`,
-        alt_text: 'venue image'
-      }
-    },
-    {
-      'type': 'context',
-      'elements': [
-        {
-          'type': 'image',
-          'image_url': 'https://cdn.glitch.com/203fa7da-fadf-4c32-8d75-fb80800ef1b5%2Fyelp_logo_sm.png?1550364622921',
-          'alt_text': 'Yelp logo'
-        },
-        {
-          'type': 'plain_text',
-          'text': `200 reviews`,
-          'emoji': true
-        }
-      ]
-    },
-    {
-      'type': 'divider'
-    },
-
-    // Result 2
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Bangalore* \nBangalore City \n\nRating: 4 on Yelp \nPrice: 1000`
-      },
-      accessory: {
-        type: 'image',
-        image_url: `https://s3-media2.fl.yelpcdn.com/bphoto/korel-1YjNtFtJlMTaC26A/o.jpg`,
-        alt_text: 'venue image'
-      }
-    },
-    {
-      'type': 'context',
-      'elements': [
-        {
-          'type': 'image',
-          'image_url': 'https://cdn.glitch.com/203fa7da-fadf-4c32-8d75-fb80800ef1b5%2Fyelp_logo_sm.png?1550364622921',
-          'alt_text': 'Yelp logo'
-        },
-        {
-          'type': 'plain_text',
-          'text': `600 reviews`,
-          'emoji': true
-        }
-      ]
-    },
-    {
-      'type': 'divider'
-    }
-  ];
-
-
   // and send back an HTTP response with data
-  const message = {
-    response_type: 'in_channel',
-    //text: `${places[0].name}`,
-    blocks: blocks
-  };
-  res.json(message);
+  
 
 
 });
