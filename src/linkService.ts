@@ -23,7 +23,7 @@ export class linkService {
         } else if (command && command.toString().toLocaleLowerCase() == "create") {
             if (queries.length > 1) {
                 let link = queries[1];
-                let tags = queries.length > 2 ? queries[2].split(' ') : ""
+                let tags = queries.length > 2 ? queries[2].toString().toLocaleLowerCase().split(' ') : ""
                 return linkService.processCreateLinkCommand(link, tags, res);
             } else {
                 return linkService.sendInvalidOperationResponse(res);
@@ -89,6 +89,12 @@ export class linkService {
     private static async processCreateLinkCommand(link: String, tags: String, res: express.Response) {
         if (link != null) {
 
+            let linkExist = await linkDbModel.findOne({link:link}).exec();
+
+            if(linkExist != null){
+                return linkService.duplicateLinkResponse(res);
+            }
+
             let linKData: any = {
                 "link": link,
                 "tags": tags
@@ -122,6 +128,24 @@ export class linkService {
                 "text": {
                     "type": "mrkdwn",
                     "text": "`Error`        Something went wrong, Please run comman in this way kpedia command, link, tags for eg. kepdia create, http://abc.com, c# Python"
+                }
+            }];
+
+        const message = {
+            response_type: 'in_channel',
+            blocks: createResp
+        };
+
+        return res.json(message);
+    }
+
+    private static duplicateLinkResponse(res: express.Response) {
+        let createResp = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "`Error`        Sorry! Someone already share that link"
                 }
             }];
 
