@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose'
 
 const Schema = mongoose.Schema;
 
- const CommentSchema = new Schema({
+const CommentSchema = new Schema({
     commentedBY: String,
     commentDate: {
         type: Date,
@@ -11,7 +11,7 @@ const Schema = mongoose.Schema;
     comment: String
 });
 
- const KpediaLinkSchema = new Schema({
+const KpediaLinkSchema = new Schema({
     description_line1:
     {
         type: String
