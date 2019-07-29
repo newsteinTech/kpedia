@@ -1,4 +1,7 @@
 import * as express from "express"
+import {linkService} from "./linkService"
+const linkServiceObj = new linkService();
+
 
 export class Routes {
 
@@ -10,5 +13,7 @@ export class Routes {
                 message: 'Health Check Success'
             })
         });
+
+        app.post('/kpedia', linkServiceObj.PorcessSlackCommand);
     }
 }

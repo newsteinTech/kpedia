@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser"
-import { Db } from "./../src/db"
-import { Routes } from './../src/route'
+import { Db } from "./db"
+import { Routes } from "./route"
 const port = process.env.PORT || "3000";
 
 class App {
@@ -21,15 +21,14 @@ class App {
             console.log('Express server listening on port ');
         })
 
-        Routes.configRoutes(this.app)
-
         this.config();
+        Routes.configRoutes(this.app);
         Db.mongoSetup();
     }
 
-    private config(): void {
-        this.app.use(bodyParser.urlencoded({ verify: this.rawBodyBuffer, extended: true }));
-        this.app.use(bodyParser.json({ verify: this.rawBodyBuffer }));
+    private config(): void{
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
     }
 }
 

@@ -11,35 +11,22 @@ const CommentSchema = new Schema({
     comment: String
 });
 
-const KpediaLinkSchema = new Schema({
-    description_line1:
-    {
-        type: String
-    },
-    description_line2:
-    {
-        type: String
-    },
-    topic:
-    {
-        type: String
-    },
-    tags:
-    {
-        type: String
-    },
+const linkSchema = new Schema({
+    topic:String,
+    description: String,
+    tags : [String],
     link:
     {
         type: String,
         required: true,
         unique: true
     },
-    upvote:
+    like:
     {
         type: Number,
         default: 0
     },
-    downvote:
+    dislike:
     {
         type: Number,
         default: 0
@@ -65,7 +52,4 @@ const KpediaLinkSchema = new Schema({
     }
 });
 
-const KpediaLink = mongoose.model("KpediaLink", KpediaLinkSchema)
-
-
-module.exports = { KpediaLink };
+export const linkDbModel = mongoose.model("link", linkSchema);
