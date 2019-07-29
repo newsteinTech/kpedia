@@ -2,7 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser"
 import { Db } from "./db"
 import { Routes } from "./route"
-const port = process.env.PORT || "5000";
+const port = 5000;
 
 class App {
 
@@ -17,8 +17,8 @@ class App {
     constructor() {
         this.app = express();
 
-        this.app.listen(parseInt(port), 'localhost', () => {
-            console.log('Express server listening on port ');
+        this.app.listen(port, () => {
+            console.log(`Express server listening on port ${port}`);
         })
 
         this.config();
