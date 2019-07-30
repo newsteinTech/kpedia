@@ -117,7 +117,7 @@ export class linkService {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": "`Success`        Blog posted successfully"
+                        "text": "`Success`        Link shared successfully"
                     }
                 }];
 
