@@ -348,7 +348,7 @@ export class linkService {
         try {
             console.log("TAGS")
             console.log(tags)
-            let allLinks: Array<any> = await linkDbModel.find({ "tags": { "$all": tags } }).exec();
+            let allLinks: Array<any> = await linkDbModel.find({ "tags": { "$all": tags } }).limit(10).exec();
 
             console.log("search")
             console.log(allLinks)
