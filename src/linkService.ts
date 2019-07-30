@@ -187,7 +187,7 @@ export class linkService {
     private static async getAllLinks(res: express.Response) {
 
         try {
-            let allLinks: Array<any> = await linkDbModel.find().exec();
+            let allLinks: Array<any> = await linkDbModel.find().limit(10).exec();
             console.log(allLinks)
             let blocks: Array<any> = [];
 
@@ -233,7 +233,7 @@ export class linkService {
                                 "text": {
                                     "type": "plain_text",
                                     "emoji": true,
-                                    "text": `${item.like} like`
+                                    "text": `${item.like} UpVote`
                                 },
                                 "style": "primary",
                                 "value": "click_me_123"
@@ -243,7 +243,7 @@ export class linkService {
                                 "text": {
                                     "type": "plain_text",
                                     "emoji": true,
-                                    "text": `${item.dislike} disLike`
+                                    "text": `${item.dislike} DownVote`
                                 },
                                 "style": "danger",
                                 "value": "click_me_123"
@@ -399,7 +399,7 @@ export class linkService {
                                 "text": {
                                     "type": "plain_text",
                                     "emoji": true,
-                                    "text": `${item.like} like`
+                                    "text": `${item.like} UpVote`
                                 },
                                 "style": "primary",
                                 "value": "click_me_123"
@@ -409,7 +409,7 @@ export class linkService {
                                 "text": {
                                     "type": "plain_text",
                                     "emoji": true,
-                                    "text": `${item.dislike} disLike`
+                                    "text": `${item.dislike} DownVote`
                                 },
                                 "style": "danger",
                                 "value": "click_me_123"
