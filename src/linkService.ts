@@ -13,23 +13,14 @@ export class linkService {
         //[command, link, tags]
 
         const query = req.body.text ? req.body.text : 'help';
-        const queries: Array<any> = query.split(',');
+        const queries: Array<any> = query.split(' ');
         const command = queries[0];
 
         console.log("AAAABBBB")
         console.log(command)
         if (command && command.toString().toLocaleLowerCase() == "help") {
             return linkService.sendHelpCommandResponse(res);
-        } else if (command && command.toString().toLocaleLowerCase() == "create") {
-            if (queries.length > 1) {
-                let link = queries[1];
-                let tags = queries.length > 2 ? queries[2].toString().toLocaleLowerCase().split(' ') : ""
-                return linkService.processCreateLinkCommand(link, tags, res);
-            } else {
-                return linkService.sendInvalidOperationResponse(res);
-            }
-
-        } else if (command && command.toString().toLocaleLowerCase() == "getall") {
+        } else if (command && command.toString().toLocaleLowerCase() == "get") {
             console.log("CCCCC")
             return linkService.getAllLinks(res)
 
@@ -37,11 +28,27 @@ export class linkService {
             console.log("ANISH")
             console.log(queries[1])
 
-            let tags = queries.length > 1 ? queries[1].split(' ') : [];
+            let tags = queries.length > 1 ? queries[1].split(',') : [];
             return linkService.searchLinksByTags(tags, res);
-        } else {
-            return linkService.sendInvalidOperationResponse(res);
-        }
+        }else  {
+            let link = queries[0];
+            let tags = queries.length > 0 ? queries[1].toString().toLocaleLowerCase().split(',') : ""
+            console.log("CREATE")
+            console.log(queries[1])
+            console.log(tags)
+            return linkService.processCreateLinkCommand(link, tags, res);
+            // if (queries.length > 0) {
+            //     let link = queries[1];
+            //     let tags = queries.length > 2 ? queries[2].toString().toLocaleLowerCase().split(' ') : ""
+            //     return linkService.processCreateLinkCommand(link, tags, res);
+            // } else {
+            //     return linkService.sendInvalidOperationResponse(res);
+            // }
+
+        } 
+        // else {
+        //     return linkService.sendInvalidOperationResponse(res);
+        // }
     }
 
     private static sendHelpCommandResponse(res: express.Response) {
@@ -51,7 +58,17 @@ export class linkService {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "`Create`        Add Site into Kpedia and get Karma "
+                    "text": "`[link] [Tag]`        Share links across org. for e.g. https://confluence.kabbage.com/display/QA/Partner+Test+Accounts partner testing,confluence"
+                }
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "`get [Number]`        Fetch the Top links, limited by Number option "
                 }
             },
             {
@@ -62,19 +79,11 @@ export class linkService {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "`GetAll`        Get All the top rated sites link"
+                    "text": "`search [Tag]`        Search for links by tags. for e.g. search python3,django"
                 }
             },
             {
                 "type": "divider"
-            },
-
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "`Search`        Search by tags like Search C# ASP.NET"
-                }
             }
         ];
 
@@ -89,9 +98,9 @@ export class linkService {
     private static async processCreateLinkCommand(link: String, tags: String, res: express.Response) {
         if (link != null) {
 
-            let linkExist = await linkDbModel.findOne({link:link}).exec();
+            let linkExist = await linkDbModel.findOne({ link: link }).exec();
 
-            if(linkExist != null){
+            if (linkExist != null) {
                 return linkService.duplicateLinkResponse(res);
             }
 
@@ -145,7 +154,7 @@ export class linkService {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "`Error`        Sorry! Someone already share that link"
+                    "text": "`Error`        This link has already been shared!"
                 }
             }];
 
@@ -337,6 +346,8 @@ export class linkService {
     private static async searchLinksByTags(tags: any, res: express.Response) {
 
         try {
+            console.log("TAGS")
+            console.log(tags)
             let allLinks: Array<any> = await linkDbModel.find({ "tags": { "$all": tags } }).exec();
 
             console.log("search")
